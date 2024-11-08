@@ -1,0 +1,21 @@
+{
+  "name": "my-react-contact-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-admin": "wp-scripts build src/admin/index.js --output-path=admin/js --output-filename=index.js",
+    "build-frontend": "wp-scripts build src/frontend/index.js --output-path=frontend/js --output-filename=index.js",
+    "start-admin": "wp-scripts start src/admin/index.js --output-path=admin/js --output-filename=index.js",
+    "start-frontend": "wp-scripts start src/frontend/index.js --output-path=frontend/js --output-filename=index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^30.4.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  }
+}
