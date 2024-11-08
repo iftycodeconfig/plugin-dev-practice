@@ -16,25 +16,17 @@ const ContactForm = () => {
       name,
       email,
       message,
-      action: "submit_contact_form", // Ensure this matches the hook in PHP
       nonce: contact_form_ajax.nonce, // Ensure this is correctly localized in PHP
     };
 
     try {
-      const response = await fetch(contact_form_ajax.ajax_url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      setIsLoading(false);
-      setResponseMessage(result.message || "Form submitted successfully!");
+      const response = await wp.ajax.post("submit_contact_form", data);
+      console.log(response.message, "response");
+      setResponseMessage(response.message || "Form submitted successfully!");
     } catch (error) {
-      setIsLoading(false);
       setResponseMessage("Error submitting the form");
+    } finally {
+      setIsLoading(false);
     }
   };
 

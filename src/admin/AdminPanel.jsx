@@ -4,20 +4,12 @@ const AdminPanel = () => {
   const [submissions, setSubmissions] = useState([]);
 
   const fetchSubmissions = async () => {
-    const response = await fetch(contact_form_ajax.ajax_url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        action: "get_contact_form_submissions",
-        nonce: contact_form_ajax.nonce,
-      }),
+    const response = await wp.ajax.post("get_contact_form_submissions", {
+      nonce: contact_form_ajax.nonce,
     });
-
-    const result = await response.json();
-    if (result.success) {
-      setSubmissions(result.data);
+    console.log(response, "response");
+    if (response.data) {
+      setSubmissions(response.data);
     }
   };
 

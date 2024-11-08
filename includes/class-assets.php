@@ -1,40 +1,66 @@
 <?php
+
 namespace MyReactContactPlugin;
 
 class Assets
 {
-public function __construct()
-{
-add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
-add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-}
+    public function __construct()
+    {
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+    }
 
-// Enqueue assets for the frontend
-public function enqueue_frontend_assets()
-{
-// Ensure the paths are correct
-wp_enqueue_style('frontend-style', plugin_dir_url(__FILE__) . '../frontend/js/index.css');
+    // Helper function to enqueue scripts and styles
+    private function enqueue_assets($type)
+    {
+        $base_dir = $type === 'frontend' ? '../frontend/js/' : '../admin/js/';
+        $asset_file = plugin_dir_path(__FILE__) . "{$base_dir}index.asset.php";
 
-// Correct script handle (it should match with the one you're localizing)
-wp_enqueue_script('frontend-react-js', plugin_dir_url(__FILE__) . '../frontend/js/index.js', ['react', 'react-dom', 'react-jsx-runtime'], null, true);
+        if (!file_exists($asset_file)) {
+            return;
+        }
 
-// Localize script for AJAX requests (Ensure you're using the correct script handle)
-wp_localize_script('frontend-react-js', 'contact_form_ajax', [
-'ajax_url' => admin_url('admin-ajax.php'),
-'nonce' => wp_create_nonce('contact_form_nonce')
-]);
-}
+        $asset = include $asset_file;
 
-// Enqueue assets for the admin
-public function enqueue_admin_assets()
-{
-wp_enqueue_style('admin-style', plugin_dir_url(__FILE__) . '../admin/js/index.css');
-wp_enqueue_script('admin-js', plugin_dir_url(__FILE__) . '../admin/js/index.js', ['react', 'react-dom', 'react-jsx-runtime'], null, true);
+        // Enqueue JavaScript
+        $js_handle = "{$type}-js";
+        wp_enqueue_script(
+            $js_handle,
+            plugins_url("{$base_dir}index.js", __FILE__),
+            array_merge($asset['dependencies'], ['wp-util']),
+            $asset['version'],
+            true
+        );
 
-// Localize script for admin AJAX requests
-wp_localize_script('admin-js', 'contact_form_ajax', [
-'ajax_url' => admin_url('admin-ajax.php'), // Admin AJAX URL
-'nonce' => wp_create_nonce('contact_form_nonce') // Nonce for security
-]);
-}
+
+        // Enqueue CSS based on RTL
+        $css_handle = is_rtl() ? "{$type}-style-rtl" : "{$type}-style";
+        $css_file = is_rtl() ? "{$base_dir}index-rtl.css" : "{$base_dir}index.css";
+        wp_enqueue_style(
+            $css_handle,
+            plugins_url($css_file, __FILE__),
+            array_filter(
+                $asset['dependencies'],
+                fn($style) => wp_style_is($style, 'registered')
+            ),
+            $asset['version']
+        );
+
+        // Localize script for AJAX requests
+        wp_localize_script($js_handle, 'contact_form_ajax', [
+            'nonce' => wp_create_nonce('contact_form_nonce')
+        ]);
+    }
+
+    // Enqueue assets for the frontend
+    public function enqueue_frontend_assets()
+    {
+        $this->enqueue_assets('frontend');
+    }
+
+    // Enqueue assets for the admin
+    public function enqueue_admin_assets()
+    {
+        $this->enqueue_assets('admin');
+    }
 }
