@@ -15,7 +15,7 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: https://45.90.220.8
+          server: 45.90.220.8
           username: root
           password: iRCg.@DaGXJF3P+RM7/w
           local-dir: ./
