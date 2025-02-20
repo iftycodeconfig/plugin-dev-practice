@@ -18,5 +18,5 @@ jobs:
           server: https://45.90.220.8
           username: root
           password: iRCg.@DaGXJF3P+RM7/w
-          local-dir: /
+          local-dir: ./
           server-dir: /var/lib/docker/volumes/b08sskowwos848kk8w4o84g0_wordpress-files/_data/wp-content/
