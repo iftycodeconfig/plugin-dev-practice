@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: My React Contact Plugin
+Plugin Name: My React Contact Plugins
 Description: A contact form plugin with React-based admin dashboard and frontend UI.
 Version: 1.0
 Author: Your Name
