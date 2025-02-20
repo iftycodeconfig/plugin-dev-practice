@@ -19,4 +19,4 @@ jobs:
           username: root
           password: iRCg.@DaGXJF3P+RM7/w
           local-dir: /
-          server-dir: /var/lib/docker/volumes/b08sskowwos848kk8w4o84g0_wordpress-files/_data/wp-content
+          server-dir: /var/lib/docker/volumes/b08sskowwos848kk8w4o84g0_wordpress-files/_data/wp-content/
