@@ -29,9 +29,21 @@ jobs:
       - name: Prepare ZIP file
         run: |
           mkdir build
-          rsync -av --progress . build/ --exclude={".git",".github","node_modules",".gitignore","build",".DS_Store","*.zip", "package.json", "package-lock.json", "postcss.config.js", "tailwind.config.js", "src"}
+          rsync -av --progress ./ build/ \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "node_modules" \
+            --exclude ".gitignore" \
+            --exclude "build" \
+            --exclude ".DS_Store" \
+            --exclude "*.zip" \
+            --exclude "package.json" \
+            --exclude "package-lock.json" \
+            --exclude "postcss.config.js" \
+            --exclude "tailwind.config.js" \
+            --exclude "src"
           cd build
-          zip -r plugin-build.zip ./plugin-dev-practice
+          zip -r plugin-build.zip ./plugin-dev-practice  # Change to your plugin folder name
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
