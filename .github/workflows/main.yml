@@ -1,22 +1,40 @@
-name: Deploy to cPanel
+name: Build WordPress Plugin
 
 on:
   push:
     branches:
+      - main  # Adjust as needed
+  pull_request:
+    branches:
       - main
+
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 🚚 Get latest code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          server: 45.90.220.8
-          username: root
-          password: iRCg.@DaGXJF3P+RM7/w
-          local-dir: ./
-          server-dir: /
+          node-version: '18'  # Adjust the Node.js version if needed
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      - name: Prepare ZIP file
+        run: |
+          mkdir build
+          rsync -av --progress . build/ --exclude={".git",".github","node_modules",".gitignore","build",".DS_Store","*.zip", "package.json", "package-lock.json", "postcss.config.js", "tailwind.config.js", "src"}
+          cd build
+          zip -r plugin-build.zip ./plugin-dev-practice
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-build
+          path: build/plugin-build.zip
