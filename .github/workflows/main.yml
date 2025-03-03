@@ -34,7 +34,7 @@ jobs:
           zip -r plugin-build.zip ./plugin-dev-practice
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: plugin-build
           path: build/plugin-build.zip
